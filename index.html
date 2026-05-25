@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+/* ── Light Mode (default) ── */
+:root{
+  --cream:#F8FAFF;--cream-dark:#EEF2FF;--brown-deep:#1E1B4B;--brown-mid:#3730A3;
+  --brown-light:#6366F1;--gold:#6366F1;--gold-light:#818CF8;--sage:#10B981;
+  --sage-light:#34D399;--rust:#F43F5E;--rust-light:#FB7185;--ink:#F8FAFF;
+  --muted:#94A3B8;--card-bg:#FFFFFF;--border:rgba(99,102,241,0.12);
+  --shadow:0 4px 24px rgba(99,102,241,0.08);--shadow-hover:0 8px 40px rgba(99,102,241,0.18);
+  --radius:16px;--radius-sm:10px;
+  --bg-body:#F8FAFF;--text-primary:#1E1B4B;--text-sec:#475569;
+}
+/* ── Dark Mode ── */
+[data-theme="dark"]{
+  --cream:#0F1117;--cream-dark:#1A1D27;--brown-deep:#F1F5F9;--brown-mid:#CBD5E1;
+  --brown-light:#94A3B8;--gold:#6366F1;--gold-light:#818CF8;--sage:#10B981;
+  --sage-light:#34D399;--rust:#F43F5E;--rust-light:#FB7185;--ink:#0F1117;
+  --muted:#64748B;--card-bg:#161929;--border:rgba(255,255,255,0.07);
+  --shadow:0 4px 24px rgba(0,0,0,0.35);--shadow-hover:0 8px 40px rgba(99,102,241,0.25);
+  --bg-body:#0F1117;--text-primary:#F1F5F9;--text-sec:#94A3B8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Tajawal',sans-serif;background:var(--cream);color:var(--brown-deep);min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+#app{max-width:1200px;margin:0 auto;padding:1.5rem 1rem 4rem}
+.header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:.75rem}
+.logo-row{display:flex;align-items:center;gap:10px}
+.logo-icon{width:44px;height:44px;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.main-title{font-family:'Inter','Tajawal',sans-serif;font-size:22px;font-weight:700;color:var(--brown-deep);letter-spacing:-.5px}
+.main-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lang-toggle{display:flex;background:var(--card-bg);border:1px solid var(--border);border-radius:50px;padding:3px;gap:2px}
+.lang-btn{padding:5px 14px;border-radius:50px;border:none;font-family:'Tajawal',sans-serif;font-size:12px;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s;font-weight:500}
+.lang-btn.active{background:var(--brown-deep);color:var(--card-bg)}
+.hbtn{display:flex;align-items:center;gap:5px;padding:8px 16px;border-radius:50px;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid var(--border)}
+.hbtn-primary{background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border-color:transparent}
+.hbtn-primary:hover{background:linear-gradient(135deg,#4F46E5,#7C3AED);transform:translateY(-1px)}
+.hbtn-outline{background:transparent;color:var(--brown-mid)}
+.hbtn-outline:hover{background:var(--cream-dark);border-color:var(--brown-light)}
+.hbtn:disabled{opacity:.5;cursor:not-allowed}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:1.25rem}
+.stat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.9rem 1rem;position:relative;overflow:hidden;transition:transform .2s}
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#6366F1,#8B5CF6);opacity:0;transition:opacity .2s}
+.stat-card:hover{transform:translateY(-2px);border-color:rgba(99,102,241,0.3)}
+.stat-card:hover::after{opacity:1}
+.stat-icon{font-size:15px;margin-bottom:5px;display:block}
+.stat-val{font-family:'Inter','Tajawal',sans-serif;font-size:22px;font-weight:700;color:var(--brown-deep);line-height:1;margin-bottom:3px}
+.stat-lbl{font-size:11px;color:var(--muted)}
+.search-section{margin-bottom:1.25rem}
+.search-bar{position:relative;margin-bottom:10px}
+.search-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+.search-input{width:100%;padding:10px 42px 10px 18px;background:var(--card-bg);border:1px solid var(--border);border-radius:50px;font-family:'Tajawal',sans-serif;font-size:14px;color:var(--brown-deep);outline:none;transition:border-color .2s,box-shadow .2s}
+.search-input:focus{border-color:#6366F1;box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+.search-input::placeholder{color:var(--muted)}
+.filter-scroll{display:flex;gap:7px;flex-wrap:wrap}
+.chip{padding:5px 13px;border-radius:50px;border:1px solid var(--border);background:var(--card-bg);color:var(--muted);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .18s}
+.chip:hover{border-color:var(--brown-light);color:var(--brown-mid)}
+.chip.active{background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border-color:transparent}
+.chip.cat-chip.active{background:linear-gradient(135deg,#06B6D4,#3B82F6);color:#fff;border-color:transparent}
+.cafes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.cafe-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:box-shadow .25s,transform .25s;animation:fadeUp .35s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.cafe-card:hover{box-shadow:0 8px 40px rgba(99,102,241,.2);transform:translateY(-3px);border-color:rgba(99,102,241,.25)}
+.cafe-img{width:100%;height:150px;object-fit:cover;display:block;background:var(--cream-dark)}
+.cafe-img-placeholder{width:100%;height:150px;background:linear-gradient(135deg,var(--cream-dark),var(--cream));display:flex;align-items:center;justify-content:center;font-size:44px}
+.cafe-top{padding:.9rem 1.1rem;cursor:pointer}
+.cafe-header{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start}
+.cafe-name{font-family:'Inter','Tajawal',sans-serif;font-size:14px;font-weight:700;color:var(--brown-deep);line-height:1.3;margin-bottom:2px}
+.cafe-addr{font-size:11px;color:var(--muted);line-height:1.5}
+.expand-icon{color:var(--muted);font-size:11px;margin-top:2px;flex-shrink:0;transition:transform .2s}
+.cafe-card.open-card .expand-icon{transform:rotate(180deg)}
+.cafe-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:7px}
+.gmap-rating{display:flex;align-items:center;gap:3px;font-size:12px;font-weight:500;color:#FBBF24}
+.gmap-num{color:var(--brown-mid)}
+.rev-count{font-size:11px;color:var(--muted)}
+.status-pill{font-size:10px;font-weight:500;padding:2px 9px;border-radius:50px}
+.status-open{background:rgba(16,185,129,.15);color:#10B981}
+.info-pills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
+.pill{font-size:10px;padding:3px 9px;border:1px solid var(--border);border-radius:50px;color:var(--brown-light);background:transparent}
+.dist-near{background:rgba(16,185,129,.12);color:#10B981;border-color:rgba(16,185,129,.3)}
+.dist-mid{background:rgba(196,148,42,.1);color:var(--gold);border-color:rgba(196,148,42,.3)}
+.dist-far{background:rgba(184,92,56,.1);color:var(--rust);border-color:rgba(184,92,56,.3)}
+.cat-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px}
+.cat-tag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:50px;letter-spacing:.3px}
+.cat-reading{background:rgba(92,61,46,.08);color:var(--brown-mid)}
+.cat-work{background:rgba(196,148,42,.12);color:#8B6A00}
+.cat-friends{background:rgba(184,92,56,.1);color:var(--rust)}
+.cat-family{background:rgba(122,140,110,.15);color:var(--sage)}
+.cat-none{background:var(--cream-dark);color:var(--muted)}
+.action-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+.abtn{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:50px;font-size:10px;font-weight:600;cursor:pointer;font-family:'Tajawal',sans-serif;transition:all .18s;text-decoration:none}
+.abtn-map{background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);color:#818CF8}
+.abtn-map:hover{background:#6366F1;color:#fff;border-color:#6366F1}
+.abtn-del{background:transparent;border:1px solid rgba(184,92,56,.2);color:var(--rust)}
+.abtn-del:hover{background:var(--rust);color:#fff;border-color:var(--rust)}
+.abtn-vis{background:transparent;border:1px solid rgba(122,140,110,.25);color:var(--sage)}
+.abtn-vis:hover{background:var(--sage);color:#fff}
+.abtn-vis.active{background:rgba(122,140,110,.15)}
+.cafe-notes{font-size:11px;color:var(--muted);font-style:italic;margin-top:3px;line-height:1.5;padding:6px 9px;background:var(--cream-dark);border-radius:7px}
+.ratings-panel{border-top:1px solid var(--border);padding:.9rem 1.1rem;background:linear-gradient(180deg,var(--cream-dark) 0%,var(--cream) 100%)}
+.panel-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px}
+.crit-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.crit-label{font-size:12px;color:var(--brown-mid);flex:1}
+.stars-wrap{display:flex;gap:3px}
+.star{font-size:18px;cursor:pointer;color:rgba(99,102,241,0.18);transition:color .1s,transform .1s;user-select:none;line-height:1}
+.star.lit{color:#818CF8}
+.star:hover{transform:scale(1.2)}
+.dist-section{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.dist-section-label{font-size:11px;color:var(--muted);margin-bottom:7px;font-weight:500}
+.dist-options{display:flex;gap:5px;flex-wrap:wrap}
+.dist-opt{padding:4px 11px;border-radius:50px;border:1px solid var(--border);font-family:'Tajawal',sans-serif;font-size:11px;cursor:pointer;background:var(--card-bg);color:var(--muted);transition:all .15s}
+.dist-opt:hover{border-color:var(--brown-light);color:var(--brown-mid)}
+.dist-opt.sel-near{background:rgba(122,140,110,.15);color:var(--sage);border-color:var(--sage-light);font-weight:600}
+.dist-opt.sel-mid{background:rgba(196,148,42,.12);color:#8B6A00;border-color:var(--gold-light);font-weight:600}
+.dist-opt.sel-far{background:rgba(184,92,56,.1);color:var(--rust);border-color:var(--rust-light);font-weight:600}
+.auto-box{margin-top:10px;padding:9px 11px;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.auto-box-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.auto-cats{display:flex;gap:5px;flex-wrap:wrap}
+.avg-line{margin-top:9px;padding-top:9px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.avg-num{font-family:'Inter','Tajawal',sans-serif;font-size:17px;font-weight:700;color:var(--brown-deep)}
+.save-at-btn{margin-top:10px;width:100%;padding:8px;background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px}
+.save-at-btn:hover{background:linear-gradient(135deg,#4F46E5,#7C3AED)}
+.save-at-btn:disabled{opacity:.5;cursor:not-allowed}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;padding:9px 22px;border-radius:50px;font-size:13px;font-weight:500;z-index:3000;white-space:nowrap;animation:tIn .3s,tOut .3s 2.7s forwards}
+@keyframes tIn{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes tOut{to{opacity:0;transform:translateX(-50%) translateY(16px)}}
+.empty{grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--muted)}
+.empty-icon{font-size:36px;margin-bottom:10px;display:block}
+/* Modal */
+.overlay{display:none;position:fixed;inset:0;background:rgba(26,17,8,.5);z-index:1000;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal{background:var(--card-bg);border-radius:var(--radius);padding:1.5rem;width:90%;max-width:420px;max-height:90vh;overflow-y:auto;border:1px solid var(--border);box-shadow:0 20px 60px rgba(44,24,16,.25);animation:mIn .25s cubic-bezier(.34,1.56,.64,1)}
+@keyframes mIn{from{opacity:0;transform:scale(.93) translateY(16px)}to{opacity:1;transform:none}}
+.modal-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--brown-deep);margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+.field{margin-bottom:.8rem}
+.field label{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px}
+.field input,.field select,.field textarea{width:100%;padding:8px 11px;background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'Tajawal',sans-serif;font-size:13px;color:var(--brown-deep);outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}
+.field textarea{resize:vertical;min-height:60px}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:1rem}
+.mbtn{padding:8px 18px;border-radius:50px;font-family:'Tajawal',sans-serif;font-size:13px;cursor:pointer;transition:all .2s}
+.mbtn-cancel{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.mbtn-save{background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border:none;font-weight:500}
+.mbtn-save:hover{background:linear-gradient(135deg,#4F46E5,#7C3AED)}
+.url-hint{background:rgba(196,148,42,.08);border:1px solid rgba(196,148,42,.2);border-radius:9px;padding:9px 11px;margin-bottom:12px;font-size:11px;color:var(--brown-mid);line-height:1.7}
+.url-preview{display:none;background:var(--cream-dark);border-radius:9px;padding:10px;margin-bottom:10px;border:1px solid var(--border)}
+.url-fallback{display:none;background:rgba(184,92,56,.05);border:1px solid rgba(184,92,56,.15);border-radius:9px;padding:9px;margin-bottom:9px;font-size:12px;color:var(--rust)}
+.spin{display:inline-block;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Mobile Responsive ── */
+@media (max-width: 640px) {
+  #app{padding:1rem .75rem 5rem}
+
+  /* Header */
+  .header{gap:.5rem;margin-bottom:1rem;padding-bottom:1rem}
+  .main-title{font-size:18px}
+  .main-sub{font-size:11px}
+  .logo-icon{width:38px;height:38px;font-size:17px;border-radius:9px}
+  .header-right{gap:6px}
+  .hbtn{padding:7px 12px;font-size:12px}
+  .hbtn span{display:none} /* hide text, keep icon on sync btn */
+  #sync-btn{padding:7px 10px}
+  #sync-lbl{display:none}
+
+  /* Stats - 3 per row on mobile */
+  .stats-row{grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+  .stat-card{padding:.7rem .8rem}
+  .stat-val{font-size:18px}
+  .stat-lbl{font-size:10px}
+  .stat-icon{font-size:13px;margin-bottom:3px}
+
+  /* Filters - horizontal scroll */
+  .filter-scroll{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .filter-scroll::-webkit-scrollbar{display:none}
+  .chip{font-size:11px;padding:5px 11px;flex-shrink:0}
+
+  /* Grid - single column */
+  .cafes-grid{grid-template-columns:1fr;gap:12px}
+
+  /* Card */
+  .cafe-img{height:180px}
+  .cafe-img-placeholder{height:180px;font-size:50px}
+  .cafe-top{padding:.85rem 1rem}
+  .cafe-name{font-size:15px}
+  .cafe-addr{font-size:12px}
+
+  /* Action buttons - full width on mobile */
+  .action-row{gap:6px}
+  .abtn{padding:5px 11px;font-size:11px}
+
+  /* Ratings panel */
+  .ratings-panel{padding:.85rem 1rem}
+  .crit-label{font-size:13px}
+  .star{font-size:22px;color:rgba(99,102,241,0.18)}
+  .stars-wrap{gap:4px}
+
+  /* Modal */
+  .modal{padding:1.25rem;width:95%;max-height:95vh}
+  .modal-title{font-size:16px}
+
+  /* Search */
+  .search-input{font-size:14px;padding:10px 40px 10px 16px}
+
+  /* Bottom nav bar feel - fixed add button */
+  .fab{display:flex}
+}
+
+/* FAB - floating add button for mobile */
+.fab{
+  display:none;
+  position:fixed;
+  bottom:1.5rem;
+  left:1.5rem;
+  width:52px;height:52px;
+  background:linear-gradient(135deg,#6366F1,#8B5CF6);
+  color:#fff;border:none;border-radius:50%;
+  font-size:24px;cursor:pointer;
+  box-shadow:0 4px 20px rgba(99,102,241,.5);
+  align-items:center;justify-content:center;
+  z-index:500;
+  transition:transform .2s,box-shadow .2s;
+}
+.fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(99,102,241,.6)}
+.fab:active{transform:scale(0.95)}
+
+@media (max-width: 640px){
+  /* Hide header add button, show FAB */
+  .hide-mobile{display:none !important}
+  .fab{display:flex}
+}
+
+
+.theme-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--card-bg);color:var(--brown-deep);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.theme-btn:hover{border-color:var(--gold);transform:rotate(20deg)}
+
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div>
+      <div class="logo-row">
+        <div class="logo-icon">☕</div>
+        <div>
+          <div class="main-title" id="ttl">لوحة تصنيف الكافيهات</div>
+          <div class="main-sub" id="sub">مزامنة مع Airtable • تصنيف ذكي</div>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="theme-btn" onclick="openSettings()" title="إعدادات Airtable">⚙️</button>
+      <button class="hbtn hbtn-outline" id="sync-btn" onclick="loadFromAirtable()">🔄 <span id="sync-lbl">مزامنة</span></button>
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="تغيير المظهر">☀️</button>
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="btn-ar" onclick="setLang('ar')">عربي</button>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+      </div>
+      <button class="hbtn hbtn-primary hide-mobile" onclick="openModal()">+ <span id="add-lbl">إضافة</span></button>
+    </div>
+  </div>
+  <div class="stats-row" id="stats"></div>
+  <div class="search-section">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="search" placeholder="ابحث..." oninput="renderCafes()"/>
+    </div>
+    <div class="filter-scroll" id="filters"></div>
+  </div>
+  <div class="cafes-grid" id="grid"></div>
+</div>
+<button class="fab" onclick="openModal()">+</button>
+
+<!-- Add Modal -->
+<div class="overlay" id="mwrap">
+  <div class="modal" id="mbox" dir="rtl">
+    <div class="modal-title">إضافة كافيه عبر رابط جوجل ماب</div>
+    <div class="url-hint">📋 افتح الكافيه في جوجل ماب ← مشاركة ← انسخ الرابط</div>
+    <div class="field">
+      <label>رابط جوجل ماب</label>
+      <input id="m-url" placeholder="https://maps.google.com/..." oninput="parseUrl()"/>
+    </div>
+    <div class="url-preview" id="url-preview">
+      <div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:1px">تم استخراج الاسم ✓</div>
+      <div style="font-size:14px;font-weight:700;color:var(--brown-deep);margin-bottom:7px" id="prev-name">—</div>
+      <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:3px">تعديل الاسم</label>
+      <input id="m-name-edit" style="width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card-bg);font-family:Tajawal,sans-serif;font-size:13px;color:var(--brown-deep);outline:none"/>
+    </div>
+    <div class="url-fallback" id="url-fallback">
+      ⚠️ أدخل الاسم يدوياً
+      <input id="m-name-manual" placeholder="اسم الكافيه..." style="width:100%;margin-top:7px;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card-bg);font-family:Tajawal,sans-serif;font-size:13px;color:var(--brown-deep);outline:none"/>
+    </div>
+    <div class="field"><label>العنوان (اختياري)</label><input id="m-addr" placeholder="حي ...، الرياض"/></div>
+    <div class="field"><label>ملاحظات (اختياري)</label><textarea id="m-notes" placeholder="أي ملاحظات..."></textarea></div>
+    <div class="field">
+      <label>القرب من حديقة إشبيليا</label>
+      <select id="m-dist">
+        <option value="none">غير محدد</option>
+        <option value="near">قريب جداً — أقل من 5 دقائق 🟢</option>
+        <option value="mid">متوسط — 5 إلى 15 دقيقة 🟡</option>
+        <option value="far">بعيد — أكثر من 15 دقيقة 🔴</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="mbtn mbtn-cancel" onclick="closeModal()">إلغاء</button>
+      <button class="mbtn mbtn-save" id="m-save-btn" onclick="saveCafeToAirtable()">💾 حفظ في Airtable</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const AT_KEY  = localStorage.getItem('at_key')||'';
+const AT_BASE = localStorage.getItem('at_base')||'';
+const AT_TBL  = localStorage.getItem('at_tbl')||'';
+const AT_URL  = `https://api.airtable.com/v0/${AT_BASE}/${AT_TBL}`;
+const AT_H    = {'Authorization':`Bearer ${AT_KEY}`,'Content-Type':'application/json'};
+
+const CRITERIA=[
+  {key:'coffee',ar:'جودة القهوة',en:'Coffee Quality',icon:'☕'},
+  {key:'ambiance',ar:'الأجواء والديكور',en:'Ambiance & Decor',icon:'🌿'},
+  {key:'wifi',ar:'سرعة الواي فاي',en:'WiFi Speed',icon:'📶'},
+  {key:'laptop',ar:'مناسب للعمل',en:'Laptop Friendly',icon:'💻'},
+  {key:'price',ar:'الأسعار',en:'Value for Money',icon:'💰'},
+  {key:'family',ar:'مناسب للعائلات',en:'Family Friendly',icon:'👨‍👩‍👧'},
+];
+const CATS=[
+  {key:'reading',ar:'للقراءة',en:'For Reading',icon:'📚',cls:'cat-reading',score:r=>(r.ambiance||0)*.4+(r.coffee||0)*.35+((r.family||0)<=2?5:0)*.25,t:2.8},
+  {key:'work',ar:'للعمل',en:'For Work',icon:'💻',cls:'cat-work',score:r=>(r.wifi||0)*.4+(r.laptop||0)*.4+(r.ambiance||0)*.2,t:2.8},
+  {key:'friends',ar:'لجمعات الأصدقاء',en:'Friends Hangout',icon:'👥',cls:'cat-friends',score:r=>(r.ambiance||0)*.35+(r.coffee||0)*.35+(r.price||0)*.3,t:2.8},
+  {key:'family',ar:'للعائلة',en:'Family Friendly',icon:'👨‍👩‍👧',cls:'cat-family',score:r=>(r.family||0)*.5+(r.price||0)*.3+(r.ambiance||0)*.2,t:2.8},
+];
+const DI={
+  near:{ar:'قريب جداً 🟢',en:'Very Near 🟢',sub:{ar:'أقل من 5 دقائق',en:'< 5 min'},cls:'dist-near',oc:'sel-near'},
+  mid:{ar:'متوسط 🟡',en:'Moderate 🟡',sub:{ar:'5-15 دقيقة',en:'5-15 min'},cls:'dist-mid',oc:'sel-mid'},
+  far:{ar:'بعيد 🔴',en:'Far 🔴',sub:{ar:'أكثر من 15 دقيقة',en:'> 15 min'},cls:'dist-far',oc:'sel-far'},
+  none:{ar:'',en:'',sub:{ar:'',en:''},cls:'',oc:''},
+};
+
+let lang='ar',activeFilter='all',expanded={},cafes=[];
+
+const L=k=>({
+  title:{ar:'لوحة تصنيف الكافيهات',en:'Cafes Rating Dashboard'},
+  sub:{ar:'مزامنة مع Airtable • تصنيف ذكي',en:'Airtable sync • Smart classification'},
+  add:{ar:'إضافة',en:'Add'},sync:{ar:'مزامنة',en:'Sync'},
+  syncing:{ar:'جاري...',en:'Loading...'},
+  search:{ar:'ابحث...',en:'Search...'},
+  all:{ar:'الكل',en:'All'},cafes:{ar:'الكافيهات',en:'Cafes'},
+  rated:{ar:'مصنَّفة',en:'Rated'},visited:{ar:'زرتها',en:'Visited'},
+  avgR:{ar:'متوسط تقييمي',en:'My Avg'},nearI:{ar:'قريب إشبيليا',en:'Near Ishbilia'},
+  myR:{ar:'تقييمي',en:'My Ratings'},autoCl:{ar:'الفئة التلقائية',en:'Auto Category'},
+  avgSc:{ar:'متوسط',en:'Avg'},notR:{ar:'لم تقيّم بعد',en:'Not rated yet'},
+  rev:{ar:'تقييم',en:'reviews'},distL:{ar:'القرب من إشبيليا 🌳',en:'Distance from Ishbilia 🌳'},
+  noClass:{ar:'أكمل التقييم',en:'Rate to classify'},noMatch:{ar:'لا فئة محددة',en:'No clear category'},
+  nearF:{ar:'🌳 قريب إشبيليا',en:'🌳 Near Ishbilia'},visF:{ar:'✅ زرتها',en:'✅ Visited'},
+  saveAt:{ar:'💾 حفظ في Airtable',en:'💾 Save to Airtable'},
+  saving:{ar:'⏳ جاري الحفظ...',en:'⏳ Saving...'},
+  markV:{ar:'✅ زيارة',en:'✅ Visited'},unmarkV:{ar:'↩ إلغاء',en:'↩ Unmark'},
+  openMap:{ar:'📍 افتح الخريطة',en:'📍 Open Maps'},
+}[k]||{})[lang]||k;
+
+const cL=c=>c.icon+' '+(lang==='ar'?c.ar:c.en);
+const catL=c=>c.icon+' '+(lang==='ar'?c.ar:c.en);
+const myAvg=r=>{const v=Object.values(r).filter(x=>x>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0;};
+const getCats=r=>Object.values(r).some(v=>v>0)?CATS.filter(c=>c.score(r)>=c.t):[];
+
+
+
+// ── Dummy data (shown when Airtable unreachable) ────────────────
+const DUMMY_CAFES=[
+  {id:'d1',airtableId:'d1',name:'كافيه لوفت / LOFT Cafe',addr:'حي العليا، طريق الملك فهد',gRating:4.6,gReviews:1240,mapsUrl:'https://maps.google.com/?q=LOFT+Cafe+Riyadh',imageUrl:'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&q=80',notes:'أجواء هادئة مناسبة للعمل',visited:true,summary:'كافيه عصري بإطلالة رائعة',dist:'far',ratings:{coffee:5,ambiance:5,wifi:4,laptop:5,price:3,family:2}},
+  {id:'d2',airtableId:'d2',name:'ذا بوتانيست / The Botanist',addr:'حي الملقا، شارع أنس بن مالك',gRating:4.8,gReviews:873,mapsUrl:'https://maps.google.com/?q=The+Botanist+Riyadh',imageUrl:'https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=400&q=80',notes:'ديكور نباتي جميل جداً',visited:false,summary:'تصميم داخلي مميز وقهوة استثنائية',dist:'mid',ratings:{coffee:5,ambiance:5,wifi:3,laptop:3,price:2,family:4}},
+  {id:'d3',airtableId:'d3',name:'سبيشالتي / Specialty Coffee',addr:'حي الورود، شارع الأمير فيصل',gRating:4.6,gReviews:980,mapsUrl:'https://maps.google.com/?q=Specialty+Coffee+Riyadh',imageUrl:'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&q=80',notes:'قهوة مختصة من أفضل المصادر',visited:true,summary:'وجهة عشاق القهوة المختصة',dist:'near',ratings:{coffee:5,ambiance:4,wifi:4,laptop:4,price:3,family:2}},
+  {id:'d4',airtableId:'d4',name:'ترينتا / Trenta',addr:'حي السليمانية، شارع التخصصي',gRating:4.7,gReviews:1890,mapsUrl:'https://maps.google.com/?q=Trenta+Riyadh',imageUrl:'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=400&q=80',notes:'مناسب للعمل والاجتماعات',visited:false,summary:'فضاء واسع ومريح لساعات العمل الطويلة',dist:'mid',ratings:{coffee:4,ambiance:4,wifi:5,laptop:5,price:3,family:3}},
+  {id:'d5',airtableId:'d5',name:'فيلا موريسكا / Villa Moresqa',addr:'حي الحمراء، شارع العروبة',gRating:4.7,gReviews:1100,mapsUrl:'https://maps.google.com/?q=Villa+Moresqa+Riyadh',imageUrl:'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400&q=80',notes:'تجربة راقية في بيئة تاريخية',visited:false,summary:'كافيه فاخر بطابع أندلسي',dist:'far',ratings:{coffee:4,ambiance:5,wifi:2,laptop:2,price:2,family:5}},
+  {id:'d6',airtableId:'d6',name:'ذا روستر / The Roaster',addr:'حي النخيل، شارع أبو بكر الصديق',gRating:4.4,gReviews:830,mapsUrl:'https://maps.google.com/?q=The+Roaster+Riyadh',imageUrl:'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80',notes:'يحمصون القهوة في المكان',visited:true,summary:'تجربة تحميص قهوة فريدة',dist:'near',ratings:{coffee:5,ambiance:3,wifi:3,laptop:3,price:4,family:3}},
+];
+
+// ── Settings ─────────────────────────────────────────────────────
+function openSettings(){
+  document.getElementById('s-key').value=localStorage.getItem('at_key')||'';
+  document.getElementById('s-base').value=localStorage.getItem('at_base')||'';
+  document.getElementById('s-tbl').value=localStorage.getItem('at_tbl')||'';
+  document.getElementById('settings-wrap').classList.add('show');
+}
+function closeSettings(){document.getElementById('settings-wrap').classList.remove('show');}
+function saveSettings(){
+  const key=document.getElementById('s-key').value.trim();
+  const base=document.getElementById('s-base').value.trim();
+  const tbl=document.getElementById('s-tbl').value.trim();
+  if(!key||!base||!tbl){showToast('❌ أدخل كل الحقول');return;}
+  localStorage.setItem('at_key',key);
+  localStorage.setItem('at_base',base);
+  localStorage.setItem('at_tbl',tbl);
+  closeSettings();
+  showToast('✅ تم الحفظ — جاري المزامنة...');
+  if(!localStorage.getItem('at_key')){openSettings();}else{loadFromAirtable();}
+}
+
+// ── Theme toggle ────────────────────────────────────────────────
+let isDark = false;
+function toggleTheme(){
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
+  document.getElementById('theme-btn').textContent = isDark ? '🌙' : '☀️';
+}
+
+// ── Airtable fetch ──────────────────────────────────────────────
+async function loadFromAirtable(){
+  const btn=document.getElementById('sync-btn');
+  btn.disabled=true;
+  document.getElementById('sync-lbl').innerHTML=`<span class="spin">☕</span> ${L('syncing')}`;
+  try{
+    let all=[],offset=null;
+    do{
+      const url=AT_URL+'?pageSize=100'+(offset?'&offset='+offset:'');
+      const res=await fetch(url,{headers:AT_H});
+      if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Error '+res.status);}
+      const d=await res.json();
+      all.push(...d.records);
+      offset=d.offset||null;
+    }while(offset);
+
+    cafes=all.map(rec=>{
+      const f=rec.fields;
+      let ratings={coffee:0,ambiance:0,wifi:0,laptop:0,price:0,family:0},dist='none';
+      try{
+        const notes=f['Notes']||'';
+        const m=notes.match(/\[r\]:(\{[\s\S]*?\})\n?---/);
+        if(m){const p=JSON.parse(m[1]);if(p.r)ratings=p.r;if(p.d)dist=p.d;}
+      }catch(e){}
+      // Get image — handle all Airtable field types
+      let imageUrl=null;
+      const img=f['Place Image'];
+      if(img){
+        if(Array.isArray(img)&&img.length>0){
+          // Attachment field: [{url, thumbnails:{large:{url}}}]
+          imageUrl=img[0]?.thumbnails?.large?.url||img[0]?.thumbnails?.full?.url||img[0]?.url||null;
+        } else if(typeof img==='string'&&img.startsWith('http')){
+          // Plain URL string
+          imageUrl=img;
+        } else if(typeof img==='object'&&img.url){
+          // Single object
+          imageUrl=img.thumbnails?.large?.url||img.url;
+        }
+      }
+      // Debug: log first record image field
+      if(all.indexOf(rec)===0) console.log('Place Image field sample:',JSON.stringify(img));
+      return {
+        id:rec.id,airtableId:rec.id,
+        name:f['Name']||'—',
+        addr:f['Address']||'',
+        gRating:parseFloat(f['Rating'])||0,
+        gReviews:parseInt(f['Review Count'])||0,
+        mapsUrl:f['Google Maps Link']||null,
+        imageUrl,
+        notes:(f['Notes']||'').replace(/\[r\]:[\s\S]*?---\n?/,'').trim(),
+        visited:!!f['Visited'],
+        summary:f['Summary']||'',
+        ratings,dist,
+      };
+    });
+    showToast(`✅ ${lang==='ar'?'تم تحميل':'Loaded'} ${cafes.length} ${lang==='ar'?'كافيه':'cafes'}`);
+    renderAll();
+  }catch(e){
+    // Load dummy data when Airtable unreachable (e.g. running locally)
+    cafes=DUMMY_CAFES.map(c=>({...c}));
+    renderAll();
+    showToast(lang==='ar'?'⚠️ بيانات تجريبية — ارفع الملف للاتصال بـ Airtable':'⚠️ Demo data — deploy to connect Airtable');
+  }
+  btn.disabled=false;
+  document.getElementById('sync-lbl').textContent=L('sync');
+}
+
+// ── Save ratings ────────────────────────────────────────────────
+async function saveRatings(cafe){
+  const btn=document.getElementById('sb-'+cafe.airtableId);
+  if(btn){btn.disabled=true;btn.textContent=L('saving');}
+  try{
+    const cats=getCats(cafe.ratings);
+    const ratingsBlock=`[r]:${JSON.stringify({r:cafe.ratings,d:cafe.dist})}\n---`;
+    const cleanNotes=(cafe.notes||'').trim();
+    const newNotes=(cleanNotes?cleanNotes+'\n':'')+ratingsBlock;
+    const fields={'Notes':newNotes,'Visited':cafe.visited};
+    if(cats.length) fields['Category']=cats.map(c=>lang==='ar'?c.ar:c.en).join(', ');
+    // Only update Category Suggestion if it's a text field - skip if error
+    const res=await fetch(AT_URL+'/'+cafe.airtableId,{method:'PATCH',headers:AT_H,body:JSON.stringify({fields})});
+    if(!res.ok){const e=await res.json();throw new Error(e.error?.message);}
+    showToast('✅ '+(lang==='ar'?'تم الحفظ':'Saved'));
+  }catch(e){showToast('❌ '+e.message);}
+  if(btn){btn.disabled=false;btn.textContent=L('saveAt');}
+}
+
+// ── Add new cafe ────────────────────────────────────────────────
+async function saveCafeToAirtable(){
+  const url=document.getElementById('m-url').value.trim();
+  const name=document.getElementById('m-name-edit').value.trim()||document.getElementById('m-name-manual').value.trim();
+  if(!name){showToast('❌ '+(lang==='ar'?'أدخل رابط أو اسم':'Enter link or name'));return;}
+  const addr=document.getElementById('m-addr').value.trim();
+  const notes=document.getElementById('m-notes').value.trim();
+  const dist=document.getElementById('m-dist').value;
+  const btn=document.getElementById('m-save-btn');
+  btn.disabled=true;btn.textContent=L('saving');
+  try{
+    const ratingsBlock=`[r]:${JSON.stringify({r:{coffee:0,ambiance:0,wifi:0,laptop:0,price:0,family:0},d:dist})}\n---`;
+    const fields={
+      'Name':name,'Address':addr||'الرياض',
+      'Google Maps Link':url||'',
+      'Notes':(notes?notes+'\n':'')+ratingsBlock,
+      'Visited':false,
+      'Date Added':new Date().toISOString().split('T')[0],
+    };
+    const res=await fetch(AT_URL,{method:'POST',headers:AT_H,body:JSON.stringify({fields})});
+    if(!res.ok){const e=await res.json();throw new Error(e.error?.message);}
+    showToast('✅ '+(lang==='ar'?'تم الحفظ — اضغط مزامنة':'Saved — tap sync'));
+    closeModal();
+  }catch(e){showToast('❌ '+e.message);}
+  btn.disabled=false;btn.textContent='💾 '+(lang==='ar'?'حفظ في Airtable':'Save to Airtable');
+}
+
+// ── Local actions ───────────────────────────────────────────────
+function setRating(id,key,val){const c=cafes.find(x=>x.id===id);if(c){c.ratings[key]=c.ratings[key]===val?0:val;expanded[id]=true;renderAll();}}
+function setDist(id,val){const c=cafes.find(x=>x.id===id);if(c){c.dist=val;renderAll();}}
+function toggleVisited(id){const c=cafes.find(x=>x.id===id);if(c){c.visited=!c.visited;expanded[id]=true;renderAll();}}
+function deleteCafe(id){if(!confirm(lang==='ar'?'حذف؟':'Delete?'))return;cafes=cafes.filter(c=>c.id!==id);delete expanded[id];renderAll();}
+function hoverS(id,key,val){document.querySelectorAll(`[data-cid="${id}"] .star[data-k="${key}"]`).forEach((s,i)=>s.classList.toggle('lit',i<val));}
+function unhoverS(id,key){const c=cafes.find(x=>x.id===id);if(!c)return;const v=c.ratings[key]||0;document.querySelectorAll(`[data-cid="${id}"] .star[data-k="${key}"]`).forEach((s,i)=>s.classList.toggle('lit',i<v));}
+
+// ── URL parse ───────────────────────────────────────────────────
+function parseUrl(){
+  const url=document.getElementById('m-url').value.trim();
+  const pv=document.getElementById('url-preview'),fb=document.getElementById('url-fallback');
+  pv.style.display='none';fb.style.display='none';
+  if(!url)return;
+  let name='';
+  const pm=url.match(/\/maps\/place\/([^/@?]+)/);
+  if(pm)name=decodeURIComponent(pm[1]).replace(/\+/g,' ');
+  if(!name){try{const u=new URL(url);const q=u.searchParams.get('q');if(q)name=q;}catch(e){}}
+  if(!name){const qm=url.match(/[?&]q=([^&]+)/);if(qm)name=decodeURIComponent(qm[1]).replace(/\+/g,' ');}
+  name=name.replace(/[@+]\d[\d.,]+/g,'').replace(/\+/g,' ').trim();
+  if(/^\d[\d.,-]+$/.test(name))name='';
+  if(name){document.getElementById('prev-name').textContent=name;document.getElementById('m-name-edit').value=name;pv.style.display='block';}
+  else{fb.style.display='block';}
+}
+function openModal(){['m-url','m-name-edit','m-name-manual','m-addr','m-notes'].forEach(i=>document.getElementById(i).value='');document.getElementById('url-preview').style.display='none';document.getElementById('url-fallback').style.display='none';document.getElementById('m-dist').value='none';document.getElementById('mwrap').classList.add('show');}
+function closeModal(){document.getElementById('mwrap').classList.remove('show');}
+document.getElementById('mwrap').addEventListener('click',e=>{if(e.target===document.getElementById('mwrap'))closeModal();});
+
+// ── Render ──────────────────────────────────────────────────────
+function renderStats(){
+  const rated=cafes.filter(c=>Object.values(c.ratings).some(v=>v>0)).length;
+  const vis=cafes.filter(c=>c.visited).length;
+  const rc=cafes.filter(c=>myAvg(c.ratings)>0);
+  const avg=rc.length?rc.reduce((s,c)=>s+myAvg(c.ratings),0)/rc.length:0;
+  const nearC=cafes.filter(c=>c.dist==='near').length;
+  document.getElementById('stats').innerHTML=[
+    {icon:'☕',val:cafes.length,lbl:L('cafes')},
+    {icon:'⭐',val:rated,lbl:L('rated')},
+    {icon:'✅',val:vis,lbl:L('visited')},
+    {icon:'✨',val:avg>0?avg.toFixed(1):'—',lbl:L('avgR')},
+    {icon:'🌳',val:nearC,lbl:L('nearI')},
+  ].map(it=>`<div class="stat-card"><span class="stat-icon">${it.icon}</span><div class="stat-val">${it.val}</div><div class="stat-lbl">${it.lbl}</div></div>`).join('');
+}
+
+function renderFilters(){
+  document.getElementById('filters').innerHTML=[
+    {key:'all',label:L('all')},
+    ...CRITERIA.map(c=>({key:c.key,label:cL(c)})),
+    {key:'ni',label:L('nearF')},
+    {key:'vis',label:L('visF')},
+    ...CATS.map(c=>({key:'cat_'+c.key,label:catL(c),cat:true})),
+  ].map(f=>`<button class="chip${activeFilter===f.key?' active':''}${f.cat?' cat-chip':''}" onclick="setFilter('${f.key}')">${f.label}</button>`).join('');
+}
+
+function renderCafes(){
+  const q=document.getElementById('search').value.toLowerCase();
+  let list=cafes.filter(c=>c.name.toLowerCase().includes(q)||c.addr.toLowerCase().includes(q));
+  if(activeFilter==='ni')list=list.filter(c=>c.dist==='near');
+  else if(activeFilter==='vis')list=list.filter(c=>c.visited);
+  else if(activeFilter.startsWith('cat_')){const ck=activeFilter.slice(4);list=list.filter(c=>getCats(c.ratings).some(x=>x.key===ck));}
+  else if(activeFilter!=='all')list=list.filter(c=>c.ratings[activeFilter]>0);
+  const grid=document.getElementById('grid');
+  if(!list.length){
+    const e=cafes.length===0;
+    grid.innerHTML=`<div class="empty"><span class="empty-icon">${e?'☕':'🔍'}</span>
+      <div style="font-size:15px;font-weight:600;color:var(--brown-mid);margin-bottom:8px">${e?(lang==='ar'?'لا يوجد كافيهات':'No cafes yet'):(lang==='ar'?'لا توجد نتائج':'No results')}</div>
+      ${e?`<div style="font-size:12px;margin-bottom:14px">${lang==='ar'?'اضغط "مزامنة" لتحميل كافيهاتك':'Press "Sync" to load your cafes'}</div>
+      <button class="hbtn hbtn-outline" onclick="loadFromAirtable()" style="margin:0 auto">🔄 ${lang==='ar'?'مزامنة مع Airtable':'Sync Airtable'}</button>`:''}
+    </div>`;
+    return;
+  }
+  grid.innerHTML=list.map((c,i)=>{
+    const isExp=!!expanded[c.id];
+    const avg=myAvg(c.ratings);
+    const hasR=Object.values(c.ratings).some(v=>v>0);
+    const gs=c.gRating?'★'.repeat(Math.round(c.gRating))+'☆'.repeat(5-Math.round(c.gRating)):'';
+    const di=DI[c.dist]||DI.none;
+    const cats=getCats(c.ratings);
+    const catsHTML=cats.length?cats.map(x=>`<span class="cat-tag ${x.cls}">${catL(x)}</span>`).join(''):`<span class="cat-tag cat-none">${hasR?L('noMatch'):L('noClass')}</span>`;
+    const critRows=CRITERIA.map(cr=>{
+      const v=c.ratings[cr.key]||0;
+      return `<div class="crit-row"><span class="crit-label">${cL(cr)}</span><div class="stars-wrap">${Array.from({length:5},(_,j)=>`<span class="star${j<v?' lit':''}" data-k="${cr.key}" onmouseenter="hoverS('${c.id}','${cr.key}',${j+1})" onmouseleave="unhoverS('${c.id}','${cr.key}')" onclick="setRating('${c.id}','${cr.key}',${j+1})">★</span>`).join('')}</div></div>`;
+    }).join('');
+    const distOpts=['none','near','mid','far'].map(v=>{
+      const d=DI[v],sel=c.dist===v;
+      return `<button class="dist-opt${sel&&v!=='none'?' '+d.oc:''}" onclick="setDist('${c.id}','${v}')">${v==='none'?(lang==='ar'?'غير محدد':'Not set'):(lang==='ar'?d.ar:d.en)}</button>`;
+    }).join('');
+    return `
+    <div class="cafe-card${isExp?' open-card':''}" data-cid="${c.id}" style="animation-delay:${i*.04}s">
+      ${c.imageUrl?`<img class="cafe-img" src="${c.imageUrl}" loading="lazy" onerror="this.outerHTML='<div class=cafe-img-placeholder>☕</div>'">`:`<div class="cafe-img-placeholder">☕</div>`}
+      <div class="cafe-top" onclick="toggleExpand('${c.id}')">
+        <div class="cafe-header">
+          <div style="flex:1;min-width:0">
+            <div class="cafe-name">${c.name}</div>
+            <div class="cafe-addr">${c.addr}</div>
+          </div>
+          <div class="expand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </div>
+        <div class="cafe-meta">
+          ${gs?`<div class="gmap-rating"><span>${gs}</span><span class="gmap-num">${c.gRating}</span></div>`:''}
+          ${c.gReviews?`<span class="rev-count">(${c.gReviews.toLocaleString()} ${L('rev')})</span>`:''}
+          ${c.visited?`<span class="status-pill status-open">✅ ${lang==='ar'?'زرتها':'Visited'}</span>`:''}
+        </div>
+        ${c.dist&&c.dist!=='none'?`<div class="info-pills"><span class="pill ${di.cls}">🌳 ${lang==='ar'?di.ar:di.en} · ${lang==='ar'?di.sub.ar:di.sub.en}</span></div>`:''}
+        <div class="cat-tags">${catsHTML}</div>
+        <div class="action-row" onclick="event.stopPropagation()">
+          ${c.mapsUrl?`<a class="abtn abtn-map" href="${c.mapsUrl}" target="_blank">${L('openMap')}</a>`:''}
+          <button class="abtn abtn-vis${c.visited?' active':''}" onclick="toggleVisited('${c.id}')">${c.visited?L('unmarkV'):L('markV')}</button>
+          <button class="abtn abtn-del" onclick="deleteCafe('${c.id}')">🗑</button>
+        </div>
+      </div>
+      ${isExp?`<div class="ratings-panel">
+        <div class="panel-label">${L('myR')}</div>
+        ${critRows}
+        <div class="dist-section"><div class="dist-section-label">🌳 ${L('distL')}</div><div class="dist-options">${distOpts}</div></div>
+        <div class="auto-box"><div class="auto-box-label">${L('autoCl')}</div><div class="auto-cats">${catsHTML}</div></div>
+        ${hasR?`<div class="avg-line"><span>${L('avgSc')}:</span><span class="avg-num">${avg.toFixed(1)}</span><span style="color:var(--muted)">/5</span></div>`:`<div class="avg-line" style="color:var(--muted)">${L('notR')}</div>`}
+        <button class="save-at-btn" id="sb-${c.airtableId}" onclick="saveRatings(cafes.find(x=>x.id==='${c.id}'))">${L('saveAt')}</button>
+        ${c.notes?`<div style="margin-top:8px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:8px"><strong>${lang==='ar'?'ملاحظات:':'Notes:'}</strong> ${c.notes}</div>`:''}
+      </div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function toggleExpand(id){expanded[id]=!expanded[id];renderCafes();}
+function setFilter(f){activeFilter=f;renderAll();}
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l==='ar'?'ar':'en';
+  document.documentElement.dir=l==='ar'?'rtl':'ltr';
+  document.getElementById('btn-ar').classList.toggle('active',l==='ar');
+  document.getElementById('btn-en').classList.toggle('active',l==='en');
+  document.getElementById('mbox').dir=l==='ar'?'rtl':'ltr';
+  document.getElementById('search').placeholder=L('search');
+  document.getElementById('add-lbl').textContent=L('add');
+  document.getElementById('sync-lbl').textContent=L('sync');
+  document.getElementById('ttl').textContent=L('title');
+  document.getElementById('sub').textContent=L('sub');
+  renderAll();
+}
+function showToast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3100);}
+function renderAll(){renderStats();renderFilters();renderCafes();}
+
+if(!localStorage.getItem('at_key')){openSettings();}else{loadFromAirtable();}
+</script>
+
+<!-- Settings Modal -->
+<div class="overlay" id="settings-wrap">
+  <div class="modal" id="settings-box" dir="rtl">
+    <div class="modal-title">⚙️ إعدادات Airtable</div>
+    <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:9px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--brown-mid);line-height:1.7">
+      🔒 بياناتك تُحفظ في المتصفح فقط — لا تُرفع لأي مكان
+    </div>
+    <div class="field">
+      <label>API Key <span style="font-size:10px;color:var(--muted)">(يبدأ بـ pat...)</span></label>
+      <input id="s-key" placeholder="patXXXXXX..." type="password"/>
+    </div>
+    <div class="field">
+      <label>Base ID <span style="font-size:10px;color:var(--muted)">(يبدأ بـ app...)</span></label>
+      <input id="s-base" placeholder="appXXXXXX..."/>
+    </div>
+    <div class="field">
+      <label>Table ID <span style="font-size:10px;color:var(--muted)">(يبدأ بـ tbl...)</span></label>
+      <input id="s-tbl" placeholder="tblXXXXXX..."/>
+    </div>
+    <div class="modal-btns">
+      <button class="mbtn mbtn-cancel" onclick="closeSettings()">إلغاء</button>
+      <button class="mbtn mbtn-save" onclick="saveSettings()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
